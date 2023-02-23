@@ -1,5 +1,6 @@
 package main;
 
+import java.util.HashMap;
 import cse332.exceptions.NotYetImplementedException;
 
 public class Parser {
@@ -9,8 +10,18 @@ public class Parser {
      * @param adjMatrix Adjacency matrix
      * @return Adjacency list
      */
-    public static Object parse(int[][] adjMatrix) {
-        throw new NotYetImplementedException();
+    public static HashMap<Integer, Integer>[] parse(int[][] adjMatrix) {
+        HashMap<Integer, Integer>[] adjReturn = new HashMap[adjMatrix.length];
+
+        for(int i = 0; i < adjMatrix.length; i++) {
+            for (int j = 0; j < adjMatrix[i].length; i++) {
+                if (adjMatrix[i][j] != Integer.MAX_VALUE) {
+                    adjReturn[i].put(j, adjMatrix[i][j]);
+                }
+            }
+        }
+
+        return adjReturn;
     }
 
     /**
