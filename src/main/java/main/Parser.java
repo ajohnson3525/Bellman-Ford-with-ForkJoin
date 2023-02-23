@@ -1,6 +1,7 @@
 package main;
 
 import java.util.HashMap;
+import cse332.graph.GraphUtil;
 import cse332.exceptions.NotYetImplementedException;
 
 public class Parser {
@@ -15,7 +16,7 @@ public class Parser {
 
         for(int i = 0; i < adjMatrix.length; i++) {
             for (int j = 0; j < adjMatrix[i].length; i++) {
-                if (adjMatrix[i][j] != Integer.MAX_VALUE) {
+                if (adjMatrix[i][j] != GraphUtil.INF) {
                     adjReturn[i].put(j, adjMatrix[i][j]);
                 }
             }
