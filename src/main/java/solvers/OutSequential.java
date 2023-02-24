@@ -35,14 +35,11 @@ public class OutSequential implements BellmanFordSolver {
                 D2[j] = D1[j];
             }
             for (int v = 0; v < n; v++) {
-                for (int w = 0; w < n; w++) {
-                    //if edge exists
-                    if (g[v].containsKey(w)) {
-                        cost = g[v].get(w);
-                        if (D1[w] > D2[v] + cost) {
-                            D1[w] = D2[v] + cost;
-                            P[w] = v;
-                        }
+                for (int w : g[v].keySet()) {
+                    cost = g[v].get(w);
+                    if (D1[w] > D2[v] + cost) {
+                        D1[w] = D2[v] + cost;
+                        P[w] = v;
                     }
                 }
             }
