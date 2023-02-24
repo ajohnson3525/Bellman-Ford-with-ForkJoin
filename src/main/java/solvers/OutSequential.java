@@ -11,8 +11,8 @@ import java.util.List;
 public class OutSequential implements BellmanFordSolver {
 
     public List<Integer> solve(int[][] adjMatrix, int source) {
-        HashMap<Integer, Integer>[] g = Parser.parse(adjMatrix);
-        int n = g.length;
+        List<HashMap<Integer, Integer>> g = Parser.parse(adjMatrix);
+        int n = g.size();
         int[] D1 = new int[n];
         int[] D2 = new int[n];
         int[] P = new int[n];
@@ -35,8 +35,8 @@ public class OutSequential implements BellmanFordSolver {
                 D2[j] = D1[j];
             }
             for (int v = 0; v < n; v++) {
-                for (int w : g[v].keySet()) {
-                    cost = g[v].get(w);
+                for (int w : g.get(v).keySet()) {
+                    cost = g.get(v).get(w);
                     if (D1[w] > D2[v] + cost) {
                         D1[w] = D2[v] + cost;
                         P[w] = v;
