@@ -17,7 +17,7 @@ public class Parser {
         int numV = adjMatrix.length;
         List<HashMap<Integer, Integer>> adjReturn = new ArrayList<HashMap<Integer, Integer>>();
         for (int i = 0; i < numV; i++) {
-            adjReturn.add(new HashMap<>());
+            adjReturn.add(i, new HashMap<>());
             for (int j = 0; j < numV; j++) {
                 if (adjMatrix[i][j] != GraphUtil.INF) {
                     adjReturn.get(i).put(j, adjMatrix[i][j]);
