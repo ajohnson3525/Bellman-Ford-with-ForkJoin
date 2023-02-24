@@ -29,7 +29,7 @@ public class OutSequential implements BellmanFordSolver {
         }
 
         // Bellman-Ford algorithm
-        for (int i = 0; i < n; i++) {
+        for (int k = 0; k < n; k++) {
             // Array coping
             for (int j = 0; j < n; j++){
                 D2[j] = D1[j];

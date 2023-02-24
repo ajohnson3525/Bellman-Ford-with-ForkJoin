@@ -12,13 +12,11 @@ public class Parser {
      * @return Adjacency list
      */
     public static HashMap<Integer, Integer>[] parse(int[][] adjMatrix) {
-        HashMap<Integer, Integer>[] adjReturn = new HashMap[adjMatrix.length];
-        for (int i = 0; i < adjMatrix.length; i++) {
+        int numV = adjMatrix.length;
+        HashMap<Integer, Integer>[] adjReturn = new HashMap[numV];
+        for (int i = 0; i < numV; i++) {
             adjReturn[i] = new HashMap<>();
-        }
-
-        for(int i = 0; i < adjMatrix.length; i++) {
-            for (int j = 0; j < adjMatrix.length; j++) {
+            for (int j = 0; j < numV; j++) {
                 if (adjMatrix[i][j] != GraphUtil.INF) {
                     adjReturn[i].put(j, adjMatrix[i][j]);
                 }
