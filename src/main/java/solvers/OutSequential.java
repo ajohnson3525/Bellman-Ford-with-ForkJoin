@@ -37,15 +37,14 @@ public class OutSequential implements BellmanFordSolver {
             for (int v = 0; v < n; v++) {
                 for (int w : g.get(v).keySet()) {
                     cost = g.get(v).get(w);
-                    if ((D2[v] == GraphUtil.INF && D2[v] - cost > D1[w]) ||(D2[v] != GraphUtil.INF && D1[w] > D2[v] + cost)) {
+                    if (D2[v] != GraphUtil.INF && D1[w] > D2[v] + cost) {
                         D1[w] = D2[v] + cost;
                         P[w] = v;
                     }
                 }
             }
         }
-        List<Integer> returnList = GraphUtil.getCycle(P);
-        return returnList;
+        return GraphUtil.getCycle(P);
     }
 
 }
