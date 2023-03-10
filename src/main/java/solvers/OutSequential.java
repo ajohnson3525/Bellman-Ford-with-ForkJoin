@@ -30,10 +30,11 @@ public class OutSequential implements BellmanFordSolver {
 
         // Bellman-Ford algorithm
         for (int k = 0; k < n; k++) {
-            // Array coping
+            // Array copying
             for (int j = 0; j < n; j++){
                 D2[j] = D1[j];
             }
+            // Relaxing the edges
             for (int v = 0; v < n; v++) {
                 for (int w : g.get(v).keySet()) {
                     cost = g.get(v).get(w);
