@@ -14,12 +14,10 @@ public class OutParallelBad implements BellmanFordSolver {
 
     public List<Integer> solve(int[][] adjMatrix, int source) {
         List<HashMap<Integer, Integer>> g = Parser.parse(adjMatrix);
-
         int n = adjMatrix.length;
         int[] D1 = new int[n];
-        int[] D2 = new int[n];
+        int[] D2;
         int[] P = new int[n];
-        int cost;
 
         // initialize D1 & P
         for (int i = 0; i < n; i++) {

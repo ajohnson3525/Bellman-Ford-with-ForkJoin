@@ -15,7 +15,7 @@ public class RelaxOutTaskBad extends RecursiveAction {
 
     private static List<HashMap<Integer, Integer>> g;
     private static int[] D1, D2, P;
-    private static int n, lo, hi, mid;
+    private static int n, lo, hi;
 
     public static void relax(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P, int n){
         pool.invoke(new RelaxOutTaskBad(g, D1, D2, P, n, 0, n));
@@ -29,7 +29,6 @@ public class RelaxOutTaskBad extends RecursiveAction {
         this.n = n;
         this.lo = lo;
         this.hi = hi;
-        mid = (lo + hi) / 2;
     }
 
     protected void compute() {
@@ -56,8 +55,8 @@ public class RelaxOutTaskBad extends RecursiveAction {
     }
 
     public static void parallel() {
-        RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, n, lo, mid);
-        RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P, n, mid, hi);
+        RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, n, lo, (hi + lo) / 2);
+        RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P, n, (hi + lo) / 2, hi);
         left.fork();
         right.compute();
         left.join();
