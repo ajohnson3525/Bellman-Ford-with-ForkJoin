@@ -31,13 +31,13 @@ public class OutParallelBad implements BellmanFordSolver {
             }
         }
 
-        // make this parallel?
         for (int k = 0; k < n; k++) {
             // Array copying
             D2 = ArrayCopyTask.copy(D1);
             // Relaxing the edges
-            RelaxOutTaskBad
+            RelaxOutTaskBad.relax(g, D1, D2, P, n);
         }
+        return GraphUtil.getCycle(P);
     }
 
 }
