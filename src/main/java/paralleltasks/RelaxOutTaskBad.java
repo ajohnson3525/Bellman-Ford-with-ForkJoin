@@ -1,6 +1,5 @@
 package paralleltasks;
 
-import cse332.exceptions.NotYetImplementedException;
 import cse332.graph.GraphUtil;
 
 import java.util.HashMap;
@@ -14,9 +13,15 @@ public class RelaxOutTaskBad extends RecursiveAction {
     public static final int CUTOFF = 1;
 
     private static List<HashMap<Integer, Integer>> g;
-    private static int[] D1, D2, P;
-    private static int lo, hi;
 
+    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2,
+                                int[] P, int n) {
+        RelaxOutTaskBad task = new RelaxOutTaskBad(g, D1, D2, P, 0, n);
+        pool.invoke(task);
+    }
+
+    private final int[] D1, D2, P;
+    private final int lo, hi;
 
     public RelaxOutTaskBad(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2,
                            int[] P, int lo, int hi) {
@@ -28,6 +33,8 @@ public class RelaxOutTaskBad extends RecursiveAction {
         this.hi = hi;
     }
 
+
+
     protected void compute() {
         // if cutoff - sequential
         if (hi - lo <= CUTOFF) {
@@ -35,8 +42,8 @@ public class RelaxOutTaskBad extends RecursiveAction {
 
         // else - parallel
         } else {
-            RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, lo, (hi + lo) / 2);
-            RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P,(hi + lo) / 2, hi);
+            RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, lo, ((hi + lo) / 2));
+            RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P, ((hi + lo) / 2), hi);
 
             left.fork();
             right.compute();
@@ -44,7 +51,7 @@ public class RelaxOutTaskBad extends RecursiveAction {
         }
     }
 
-    public static void sequential() {
+    public void sequential() {
         int cost;
         for (int v = lo; v < hi; v++){
             for (int w : g.get(v).keySet()) {
@@ -57,10 +64,5 @@ public class RelaxOutTaskBad extends RecursiveAction {
         }
     }
 
-    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
-                                int n) {
-        RelaxOutTaskBad task = new RelaxOutTaskBad(g, D1, D2, P, 0, n);
-        pool.invoke(task);
-    }
 
 }
