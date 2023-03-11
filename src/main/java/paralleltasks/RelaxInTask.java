@@ -12,10 +12,16 @@ public class RelaxInTask extends RecursiveAction {
 
     public static final ForkJoinPool pool = new ForkJoinPool();
     public static final int CUTOFF = 1;
-    //final int lo, hi;
-    private static int lo, hi;
-    private static int[] D1, D2, P;
     private static List<HashMap<Integer, Integer>> g;
+
+    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2,
+                                int[] P, int n) {
+        pool.invoke(new RelaxInTask(g, D1, D2, P, 0, n));
+    }
+
+    private final int lo, hi;
+    private final int[] D1, D2, P;
+
 
     public RelaxInTask(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int [] P,
                        int lo, int hi) {
@@ -44,7 +50,7 @@ public class RelaxInTask extends RecursiveAction {
         }
     }
 
-    public static void sequential() {
+    public void sequential() {
         int cost;
         for (int w = lo; w < hi; w++) {
             for (int v : g.get(w).keySet()) {
@@ -57,9 +63,6 @@ public class RelaxInTask extends RecursiveAction {
         }
     }
 
-    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2,
-                                int[] P, int n) {
-        pool.invoke(new RelaxInTask(g, D1, D2, P, 0, n));
-    }
+
 
 }
