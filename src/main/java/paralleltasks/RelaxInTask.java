@@ -37,6 +37,7 @@ public class RelaxInTask extends RecursiveAction {
             // parallel
             RelaxInTask left = new RelaxInTask(g, D1, D2, P, lo, (hi + lo) / 2);
             RelaxInTask right = new RelaxInTask(g, D1, D2, P, (hi + lo) / 2, hi);
+
             left.fork();
             right.compute();
             left.join();
@@ -59,7 +60,6 @@ public class RelaxInTask extends RecursiveAction {
     public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2,
                                 int[] P, int n) {
         pool.invoke(new RelaxInTask(g, D1, D2, P, 0, n));
-
     }
 
 }

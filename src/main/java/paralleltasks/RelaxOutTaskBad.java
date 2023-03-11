@@ -31,7 +31,7 @@ public class RelaxOutTaskBad extends RecursiveAction {
     protected void compute() {
         // if cutoff - sequential
         if (hi - lo <= CUTOFF) {
-            sequential(g, D1, D2, P, lo, hi);
+            sequential();
 
         // else - parallel
         } else {
@@ -44,8 +44,7 @@ public class RelaxOutTaskBad extends RecursiveAction {
         }
     }
 
-    public static void sequential(List<HashMap<Integer,Integer>> g, int[] D1, int[] D2,
-                                  int[] P, int lo, int hi) {
+    public static void sequential() {
         int cost;
         for (int v = lo; v < hi; v++){
             for (int w : g.get(v).keySet()) {
@@ -60,7 +59,8 @@ public class RelaxOutTaskBad extends RecursiveAction {
 
     public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
                                 int n) {
-        pool.invoke(new RelaxOutTaskBad(g, D1, D2, P,0, n));
+        RelaxOutTaskBad task = new RelaxOutTaskBad(g, D1, D2, P, 0, n);
+        pool.invoke(task);
     }
 
 }

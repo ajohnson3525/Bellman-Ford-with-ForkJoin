@@ -35,7 +35,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
     protected void compute() {
         // if cutoff - sequential
         if (hi - lo <= CUTOFF) {
-            sequential(locks,g, D1, D2, P, lo, hi);
+            sequential();
             // else - parallel
         } else {
             RelaxOutTaskLock left = new RelaxOutTaskLock(locks, g, D1, D2, P, n, lo, (hi + lo) / 2);
@@ -47,8 +47,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
         }
     }
 
-    public static void sequential(ReentrantLock[] locks, List<HashMap<Integer,Integer>> g, int[] D1, int[] D2,
-                                  int[] P, int lo, int hi) {
+    public static void sequential() {
         int cost;
         for (int v = lo; v < hi; v++) {
             for (int w : g.get(v).keySet()) {

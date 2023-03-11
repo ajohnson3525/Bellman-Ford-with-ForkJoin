@@ -36,6 +36,7 @@ public class OutParallelBad implements BellmanFordSolver {
             // Relaxing the edges
             RelaxOutTaskBad.parallel(g, D1, D2, P, n);
         }
+
         return GraphUtil.getCycle(P);
     }
 
