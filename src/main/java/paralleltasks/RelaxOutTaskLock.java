@@ -40,8 +40,8 @@ public class RelaxOutTaskLock extends RecursiveAction {
             }
             // else - parallel
         } else {
-            RelaxOutTaskLock left = new RelaxOutTaskLock(g, D1, D2, P, n, lo, (hi + lo) / 2);
-            RelaxOutTaskLock right = new RelaxOutTaskLock(g, D1, D2, P, n, (hi + lo) / 2, hi);
+            RelaxOutTaskLock left = new RelaxOutTaskLock(locks, g, D1, D2, P, n, lo, (hi + lo) / 2);
+            RelaxOutTaskLock right = new RelaxOutTaskLock(locks, g, D1, D2, P, n, (hi + lo) / 2, hi);
 
             left.fork();
             right.compute();
