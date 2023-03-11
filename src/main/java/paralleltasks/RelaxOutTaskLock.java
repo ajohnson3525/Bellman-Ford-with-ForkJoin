@@ -35,9 +35,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
     protected void compute() {
         // if cutoff - sequential
         if (hi - lo <= CUTOFF) {
-            for (int v = lo; v < hi; v++){
-                sequential(v);
-            }
+            sequential(locks,g, D1, D2, P, lo, hi);
             // else - parallel
         } else {
             RelaxOutTaskLock left = new RelaxOutTaskLock(locks, g, D1, D2, P, n, lo, (hi + lo) / 2);
@@ -49,23 +47,30 @@ public class RelaxOutTaskLock extends RecursiveAction {
         }
     }
 
-    public static void sequential(int v) {
+    public static void sequential(ReentrantLock[] locks, List<HashMap<Integer,Integer>> g, int[] D1, int[] D2,
+                                  int[] P, int lo, int hi) {
         int cost;
-        for (int w : g.get(v).keySet()) {
-            locks[w].lock();
-            cost = g.get(v).get(w);
-            if (D2[v] != GraphUtil.INF && D1[w] > D2[v] + cost) {
-                D1[w] = D2[v] + cost;
-                P[w] = v;
+        for (int v = lo; v < hi; v++) {
+            for (int w : g.get(v).keySet()) {
+                locks[w].lock();
+                cost = g.get(v).get(w);
+                if (D2[v] != GraphUtil.INF && D1[w] > D2[v] + cost) {
+                    D1[w] = D2[v] + cost;
+                    P[w] = v;
+                }
+                locks[w].unlock();
             }
-            locks[w].unlock();
         }
     }
 
     public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
                                 int n) {
         ReentrantLock[] locks = new ReentrantLock[n];
-        pool.invoke(new RelaxOutTaskLock(locks, g, D1, D2, P, n, 0, n));
+        for (int i = 0; i < n; i++) {
+            locks[i] = new ReentrantLock();
+        }
+        RelaxOutTaskLock task = new RelaxOutTaskLock(locks, g, D1, D2, P, n, 0, n);
+        pool.invoke(task);
     }
 }
 
