@@ -14,10 +14,20 @@ public class RelaxOutTaskLock extends RecursiveAction {
     public static final ForkJoinPool pool = new ForkJoinPool();
     public static final int CUTOFF = 1;
 
-    private static List<HashMap<Integer, Integer>> g;
-    private static int[] D1, D2, P;
-    private static int n, lo, hi;
-    private static ReentrantLock[] locks;
+    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
+                                int n) {
+        ReentrantLock[] locks = new ReentrantLock[n];
+        for (int i = 0; i < n; i++) {
+            locks[i] = new ReentrantLock();
+        }
+        RelaxOutTaskLock task = new RelaxOutTaskLock(locks, g, D1, D2, P, n, 0, n);
+        pool.invoke(task);
+    }
+
+    private final List<HashMap<Integer, Integer>> g;
+    private final int[] D1, D2, P;
+    private final int n, lo, hi;
+    private final ReentrantLock[] locks;
 
 
     public RelaxOutTaskLock(ReentrantLock[] locks, List<HashMap<Integer, Integer>> g, int[] D1,
@@ -47,7 +57,7 @@ public class RelaxOutTaskLock extends RecursiveAction {
         }
     }
 
-    public static void sequential() {
+    public void sequential() {
         int cost;
         for (int v = lo; v < hi; v++) {
             for (int w : g.get(v).keySet()) {
@@ -62,14 +72,6 @@ public class RelaxOutTaskLock extends RecursiveAction {
         }
     }
 
-    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
-                                int n) {
-        ReentrantLock[] locks = new ReentrantLock[n];
-        for (int i = 0; i < n; i++) {
-            locks[i] = new ReentrantLock();
-        }
-        RelaxOutTaskLock task = new RelaxOutTaskLock(locks, g, D1, D2, P, n, 0, n);
-        pool.invoke(task);
-    }
+
 }
 
