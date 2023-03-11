@@ -20,9 +20,9 @@ public class RelaxOutTaskLock extends RecursiveAction {
     private static ReentrantLock[] locks;
 
 
-    public RelaxOutTaskLock(List<HashMap<Integer, Integer>> g, int[] D1,
+    public RelaxOutTaskLock(ReentrantLock[] locks, List<HashMap<Integer, Integer>> g, int[] D1,
                             int[] D2, int[] P, int n, int lo, int hi) {
-        locks = new ReentrantLock[n];
+        this.locks = locks;
         this.g = g;
         this.D1 = D1;
         this.D2 = D2;
@@ -38,9 +38,14 @@ public class RelaxOutTaskLock extends RecursiveAction {
             for (int v = lo; v < hi; v++){
                 sequential(v);
             }
-        // else - parallel
+            // else - parallel
         } else {
-            parallel(g, D1, D2, P, n, lo, hi);
+            RelaxOutTaskLock left = new RelaxOutTaskLock(g, D1, D2, P, n, lo, (hi + lo) / 2);
+            RelaxOutTaskLock right = new RelaxOutTaskLock(g, D1, D2, P, n, (hi + lo) / 2, hi);
+
+            left.fork();
+            right.compute();
+            left.join();
         }
     }
 
@@ -58,11 +63,9 @@ public class RelaxOutTaskLock extends RecursiveAction {
     }
 
     public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
-                                int n, int lo, int hi) {
-        RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, n, lo, (hi + lo) / 2);
-        RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P, n, (hi + lo) / 2, hi);
-
-        pool.invoke(left);
-        right.compute();
-        left.join();    }
+                                int n) {
+        ReentrantLock[] locks = new ReentrantLock[n];
+        pool.invoke(new RelaxOutTaskLock(locks, g, D1, D2, P, n, 0, n));
+    }
 }
+

@@ -36,7 +36,7 @@ public class OutParallelLock implements BellmanFordSolver {
             // Array copying
             D2 = ArrayCopyTask.copy(D1);
             // Relaxing the edges
-            RelaxOutTaskLock.parallel(g, D1, D2, P, n, 0, n);
+            RelaxOutTaskLock.parallel(g, D1, D2, P, n);
         }
         return GraphUtil.getCycle(P);
     }

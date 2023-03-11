@@ -34,7 +34,7 @@ public class OutParallelBad implements BellmanFordSolver {
             // Array copying
             D2 = ArrayCopyTask.copy(D1);
             // Relaxing the edges
-            RelaxOutTaskBad.parallel(g, D1, D2, P, n, 0, n);
+            RelaxOutTaskBad.parallel(g, D1, D2, P, n);
         }
         return GraphUtil.getCycle(P);
     }
