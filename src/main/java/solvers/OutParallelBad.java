@@ -16,7 +16,7 @@ public class OutParallelBad implements BellmanFordSolver {
         List<HashMap<Integer, Integer>> g = Parser.parse(adjMatrix);
         int n = adjMatrix.length;
         int[] D1 = new int[n];
-        int[] D2;
+        int[] D2 = new int[n];
         int[] P = new int[n];
 
         // initialize D1 & P
@@ -29,11 +29,12 @@ public class OutParallelBad implements BellmanFordSolver {
             }
         }
 
+        // Bellman-Ford algorithm
         for (int k = 0; k < n; k++) {
             // Array copying
             D2 = ArrayCopyTask.copy(D1);
             // Relaxing the edges
-            RelaxOutTaskBad.relax(g, D1, D2, P, n);
+            RelaxOutTaskBad.parallel(g, D1, D2, P, n, 0, n);
         }
         return GraphUtil.getCycle(P);
     }

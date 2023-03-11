@@ -1,28 +1,68 @@
 package paralleltasks;
 
 import cse332.exceptions.NotYetImplementedException;
+import cse332.graph.GraphUtil;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class RelaxOutTaskLock extends RecursiveAction {
 
     public static final ForkJoinPool pool = new ForkJoinPool();
     public static final int CUTOFF = 1;
 
-    public RelaxOutTaskLock() {
-        throw new NotYetImplementedException();
+    private static List<HashMap<Integer, Integer>> g;
+    private static int[] D1, D2, P;
+    private static int n, lo, hi;
+    private static ReentrantLock[] locks;
+
+
+    public RelaxOutTaskLock(List<HashMap<Integer, Integer>> g, int[] D1,
+                            int[] D2, int[] P, int n, int lo, int hi) {
+        locks = new ReentrantLock[n];
+        this.g = g;
+        this.D1 = D1;
+        this.D2 = D2;
+        this.P = P;
+        this.n = n;
+        this.lo = lo;
+        this.hi = hi;
     }
 
     protected void compute() {
-        throw new NotYetImplementedException();
+        // if cutoff - sequential
+        if (hi - lo <= CUTOFF) {
+            for (int v = lo; v < hi; v++){
+                sequential(v);
+            }
+        // else - parallel
+        } else {
+            parallel(g, D1, D2, P, n, lo, hi);
+        }
     }
 
-    public static void sequential() {
-        throw new NotYetImplementedException();
+    public static void sequential(int v) {
+        int cost;
+        for (int w : g.get(v).keySet()) {
+            locks[w].lock();
+            cost = g.get(v).get(w);
+            if (D2[v] != GraphUtil.INF && D1[w] > D2[v] + cost) {
+                D1[w] = D2[v] + cost;
+                P[w] = v;
+            }
+            locks[w].unlock();
+        }
     }
 
-    public static void parallel() {
-        throw new NotYetImplementedException();
-    }
+    public static void parallel(List<HashMap<Integer, Integer>> g, int[] D1, int[] D2, int[] P,
+                                int n, int lo, int hi) {
+        RelaxOutTaskBad left = new RelaxOutTaskBad(g, D1, D2, P, n, lo, (hi + lo) / 2);
+        RelaxOutTaskBad right = new RelaxOutTaskBad(g, D1, D2, P, n, (hi + lo) / 2, hi);
+
+        pool.invoke(left);
+        right.compute();
+        left.join();    }
 }
